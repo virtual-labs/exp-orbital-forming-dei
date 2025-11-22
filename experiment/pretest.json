@@ -2,37 +2,92 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "Orbital forming is a:",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Cold forming process",
+        "b": "Hot forming process",
+        "c": "Any one of these",
+        "d": "None of these"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Orbital forming is mostly a cold-forming process.",
+        "b": "Hot forming is used rarely.",
+        "c": "Incorrect because orbital forming is typically cold.",
+        "d": "Incorrect option."
       },
       "correctAnswer": "a",
       "difficulty": "beginner"
     },
+
     {
-      "question": "This is a Sample Question 2?",
+      "question": "The maximum angle through which the peen deviates in the simulation is:",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "1°",
+        "b": "2°",
+        "c": "4°",
+        "d": "6°"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Too small compared to simulation value.",
+        "b": "Incorrect angle.",
+        "c": "Correct — simulation uses 4° deviation.",
+        "d": "Too high for simulation."
       },
       "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+
+    {
+      "question": "The material of the tube in the simulation video of orbital forming process is:",
+      "answers": {
+        "a": "Brass",
+        "b": "Aluminium",
+        "c": "Steel",
+        "d": "All of these"
+      },
+      "explanations": {
+        "a": "Brass is commonly used.",
+        "b": "Aluminium is also used in simulations.",
+        "c": "Steel tubes are used too.",
+        "d": "Correct — simulations may use all materials."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    },
+
+    {
+      "question": "The initial temperature of the tube in the simulation of orbital forming is:",
+      "answers": {
+        "a": "100°",
+        "b": "250°",
+        "c": "350°",
+        "d": "600°"
+      },
+      "explanations": {
+        "a": "Too low for the provided simulation.",
+        "b": "Higher than 100° but still not correct.",
+        "c": "Correct — simulation starts at 350°.",
+        "d": "Too high compared to given simulation."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+
+    {
+      "question": "The lower die is moved upward by which press in the simulation:",
+      "answers": {
+        "a": "Hydraulic press",
+        "b": "Mechanical press",
+        "c": "Knuckle press",
+        "d": "Hammer press"
+      },
+      "explanations": {
+        "a": "Correct — hydraulic press is used.",
+        "b": "Mechanical press is not used here.",
+        "c": "Not applicable for this simulation.",
+        "d": "Hammer press is not used for orbital forming."
+      },
+      "correctAnswer": "a",
       "difficulty": "beginner"
     }
   ]
