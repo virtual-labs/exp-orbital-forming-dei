@@ -8,7 +8,7 @@ Unlike impact or compression forming, which completes the deformation in a singl
 
 Orbital forming can achieve the same amount of forming work using only a fraction of the force required in conventional processes like staking and pressing. It can replace loose fasteners, offers excellent process control, and can be used across a wide range of materials including metals, plastics, delicate components, and hard materials.
 
-<br/><br/><center><img src="images/OrbitalForming/Orbital.jpg" alt="Orbital Forming" width="250" height="280">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="images/OrbitalForming/OrbitalForming.png" alt="Orbital Forming" width="250" height="280"><br/>Figure: Orbital Forming</center>
+<br/><br/><center><img src="images/Orbitalforming/Orbital.jpg" alt="Orbital Forming" width="250" height="280">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="images/Orbitalforming/OrbitalForming.png" alt="Orbital Forming" width="250" height="280"><br/>Figure: Orbital Forming</center>
 <br><br>
 It is a robust and precise process. Orbital forming can be used to crown, flare, swag, peen, roll, curl, broach, seal, retain and crimp material. Orbital forming also allows fine control of final form, clamp force, etc. with unequalled repeatability.
 
