@@ -1,13 +1,645 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<!-- Add CSS at the head of HTML file -->
-    <link rel="stylesheet" href="./css/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realistic Orbital Forming Virtual Lab - FINAL</title>
+    <style>
+        /* General Layout and Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e9eef2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #004a99;
+            border-bottom: 2px solid #004a99;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        #simulation-area {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px; 
+            width: 100%;
+        }
+        #machine-view {
+            width: 65%;
+            height: 550px;
+            background-color: #333; 
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5); 
+        }
+        #orbitalCanvas {
+            display: block;
+            background: #555;
+        }
+
+        /* Control Panel Styling */
+        #control-panel {
+            width: 30%; 
+            min-width: 300px;
+            padding: 20px;
+            background: #f0f8ff;
+            border: 1px solid #cceeff;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .control-group {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fff;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #004a99;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            text-align: center;
+        }
+        .limit-info {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Button Styling */
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.1s;
+            width: 100%;
+        }
+        #clamp-btn { background-color: #ff9800; color: white; }
+        #start-btn { background-color: #4caf50; color: white; }
+        #reset-btn { background-color: #f44336; color: white; }
+        button:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* Status and Outcome Styling */
+        #status-bar {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            background: #e0f7fa;
+            color: #006064;
+        }
+        #outcome-details {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            text-align: center;
+        }
+        .good { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .bad { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .warning { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+    </style>
 </head>
 <body>
-		<!-- Your code goes here-->
 
-	<!-- Add JS at the bottom of HTML file --> 
-        <script src="./js/main.js"></script>
+<div class="container">
+    <h1> Orbital Forming </h1>
+    
+    <div id="status-bar">
+         Status: CLICK " Clamp Workpiece" FIRST to enable Angle and Feed Rate inputs.
+    </div>
+
+    <hr>
+
+    <div id="simulation-area">
+        
+        <div id="machine-view">
+            <canvas id="orbitalCanvas" width="700" height="550"></canvas>
+            <div id="progress-bar-container" style="position: absolute; bottom: 20px; left: 10%; width: 80%; background: rgba(255, 255, 255, 0.1); border-radius: 5px; padding: 5px; display: none;">
+                <label style="color: white; font-size: 0.9em; margin-bottom: 5px; display: block;">Forming Progress ( Monitoring and Control)</label>
+                <div id="progress-bar" style="height: 15px; background-color: #2196f3; width: 0%; border-radius: 3px; transition: width 0.1s linear;"></div>
+            </div>
+        </div>
+
+        <div id="control-panel">
+            <h2>Controls (Steps 2 & 3)</h2>
+            
+            <div class="control-group">
+                <label for="tilt-angle"> Tool Head Alignment: Tilt Angle (&theta;)</label>
+                <input type="number" id="tilt-angle" min="3" max="6" step="1" value="4" onchange="validateAngle();" disabled> °
+                <div class="limit-info">Limit: 3° to 6°. Controls contact zone size.</div>
+            </div>
+
+            <div class="control-group">
+                <label for="feed-rate"> Progressive Metal Flow: Axial Feed Rate</label>
+                <input type="number" id="feed-rate" min="0.5" max="2.0" step="0.1" value="1.0" onchange="validateFeedRate();" disabled> mm/s
+                <div class="limit-info">Limit: 0.5 to 2.0 mm/s. Affects forming time/force.</div>
+            </div>
+
+            <button id="clamp-btn" onclick="toggleClamping()"> Clamp Workpiece</button>
+            <button id="start-btn" onclick="startFormingCycle()" disabled> Initiate Forming Cycle</button>
+            <button id="reset-btn" onclick="resetExperiment()" disabled> Reset Experiment</button>
+        </div>
+    </div>
+    
+    <div id="outcome-details">
+        <h2>7. Cycle Completion and Outcome</h2>
+        <p id="result-message"></p>
+    </div>
+</div>
+
+<script>
+    // --- Canvas Setup ---
+    const canvas = document.getElementById('orbitalCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
+
+    // --- State Variables ---
+    let isClamped = false;
+    let isForming = false;
+    let animationFrameId;
+    let startTime;
+
+    const MACHINE_HEAD_START_Y = 60; 
+    const MACHINE_BASE_Y = H - 80;    
+    const WORKPIECE_Y = MACHINE_BASE_Y - 50; 
+    const RIVET_CENTER_X = W / 2;
+
+    // Tool and Rivet State (Initial values)
+    let machineHeadY = MACHINE_HEAD_START_Y;
+    let toolAngle = 4; 
+    let toolRotation = 0; 
+    let rivetShankHeight = 60;
+    let rivetShankWidth = 30;
+    let rivetHeadHeight = 10;
+    let rivetHeadWidth = 30;
+    
+    // Clamping animation state
+    let clampArmAngle = 0; 
+    let clampOffset = 0; 
+    const CLAMP_MOVE_DURATION = 500; 
+
+    let finalHeadWidth;
+    const TOTAL_FORMING_TIME_MS = 3000; 
+
+    // --- DOM Elements ---
+    const clampBtn = document.getElementById('clamp-btn');
+    const startBtn = document.getElementById('start-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const statusBar = document.getElementById('status-bar');
+    const outcomeDetails = document.getElementById('outcome-details');
+    const resultMessage = document.getElementById('result-message');
+    const tiltAngleInput = document.getElementById('tilt-angle');
+    const feedRateInput = document.getElementById('feed-rate');
+    const progressBarContainer = document.getElementById('progress-bar-container');
+    const progressBar = document.getElementById('progress-bar');
+
+
+    // --- Canvas Drawing Functions ---
+
+    function drawMachineStructure() {
+        // Machine Base (Table)
+        ctx.fillStyle = '#888888';
+        ctx.fillRect(0, MACHINE_BASE_Y, W, H - MACHINE_BASE_Y);
+        ctx.strokeStyle = '#666666';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(0, MACHINE_BASE_Y, W, H - MACHINE_BASE_Y);
+
+        // Machine Column (Vertical support)
+        ctx.fillStyle = '#666666';
+        ctx.fillRect(RIVET_CENTER_X - 100, 0, 200, MACHINE_BASE_Y);
+        ctx.strokeStyle = '#444444';
+        ctx.strokeRect(RIVET_CENTER_X - 100, 0, 200, MACHINE_BASE_Y);
+
+        // Machine Arm/Gantry (Horizontal support for head)
+        ctx.fillStyle = '#777777';
+        ctx.fillRect(RIVET_CENTER_X - 150, MACHINE_HEAD_START_Y - 50, 300, 50);
+        ctx.strokeStyle = '#555555';
+        ctx.strokeRect(RIVET_CENTER_X - 150, MACHINE_HEAD_START_Y - 50, 300, 50);
+    }
+
+    function drawClampingMechanism() {
+        ctx.save();
+        ctx.translate(RIVET_CENTER_X, WORKPIECE_Y); 
+
+        // Clamp Base (fixed part)
+        ctx.fillStyle = '#A0A0A0';
+        ctx.fillRect(-80, 0, 160, 20);
+
+        // Clamping Arm (animated)
+        ctx.fillStyle = '#C0C0C0';
+        ctx.strokeStyle = '#888888';
+        ctx.lineWidth = 2;
+        
+        ctx.translate(0, clampOffset); 
+
+        // Arm Pivot
+        ctx.beginPath();
+        ctx.arc(0, -20, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.rotate(clampArmAngle); 
+        
+        ctx.beginPath();
+        ctx.moveTo(0, -20); 
+        ctx.lineTo(50, -20);
+        ctx.lineTo(50, -5);
+        ctx.lineTo(0, 0); 
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    function drawRivet(headWidth, headHeight, shankWidth, shankHeight, isDefect = false) {
+        const base_y = WORKPIECE_Y - shankHeight;
+        
+        // Rivet Shank 
+        ctx.fillStyle = '#FFD700';
+        ctx.fillRect(RIVET_CENTER_X - shankWidth / 2, base_y, shankWidth, shankHeight);
+        
+        // Rivet Head 
+        ctx.fillStyle = isDefect ? '#CC0000' : '#FFCC00';
+        
+        ctx.beginPath();
+        ctx.moveTo(RIVET_CENTER_X - headWidth / 2, base_y);
+        ctx.quadraticCurveTo(RIVET_CENTER_X, base_y - headHeight, RIVET_CENTER_X + headWidth / 2, base_y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Outline
+        ctx.strokeStyle = isDefect ? '#880000' : '#AA9900';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    }
+
+    function drawWorkpieceAndFixture() {
+        const fixtureHeight = 30; 
+        const fixtureWidth = W * 0.4;
+        const fixtureX = RIVET_CENTER_X - fixtureWidth / 2;
+        const workpieceThickness = 20;
+
+        // Base plate for workpiece
+        ctx.fillStyle = '#A0A0A0';
+        ctx.fillRect(fixtureX, WORKPIECE_Y + workpieceThickness, fixtureWidth, fixtureHeight - workpieceThickness);
+        
+        // Workpiece itself
+        ctx.fillStyle = '#B0C4DE'; 
+        ctx.fillRect(fixtureX, WORKPIECE_Y, fixtureWidth, workpieceThickness);
+
+        // Draw the Hole in the workpiece and fixture base
+        const holeDiameter = rivetShankWidth + 10;
+        ctx.fillStyle = '#444'; 
+        ctx.fillRect(RIVET_CENTER_X - holeDiameter / 2, WORKPIECE_Y, holeDiameter, fixtureHeight + workpieceThickness);
+        
+        // Lines for top surface
+        ctx.strokeStyle = '#778899'; 
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(fixtureX, WORKPIECE_Y);
+        ctx.lineTo(RIVET_CENTER_X - holeDiameter / 2, WORKPIECE_Y);
+        ctx.moveTo(RIVET_CENTER_X + holeDiameter / 2, WORKPIECE_Y);
+        ctx.lineTo(fixtureX + fixtureWidth, WORKPIECE_Y);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#708090'; 
+        ctx.beginPath();
+        ctx.moveTo(fixtureX, WORKPIECE_Y + workpieceThickness);
+        ctx.lineTo(RIVET_CENTER_X - holeDiameter / 2, WORKPIECE_Y + workpieceThickness);
+        ctx.moveTo(RIVET_CENTER_X + holeDiameter / 2, WORKPIECE_Y + workpieceThickness);
+        ctx.lineTo(fixtureX + fixtureWidth, WORKPIECE_Y + workpieceThickness);
+        ctx.stroke();
+    }
+
+    function drawToolHead(y, angle, rotation) {
+        ctx.save();
+        
+        ctx.translate(RIVET_CENTER_X, y);
+
+        // --- Draw the main head assembly ---
+        const headWidth = 120;
+        const headHeight = 80;
+        ctx.fillStyle = '#A0A0A0';
+        ctx.strokeStyle = '#777777';
+        ctx.lineWidth = 3;
+
+        // Main cylindrical body
+        ctx.beginPath();
+        ctx.ellipse(0, headHeight / 2, headWidth / 2, headHeight / 2.5, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.fillRect(-headWidth / 2, 0, headWidth, headHeight); 
+        ctx.strokeRect(-headWidth / 2, 0, headWidth, headHeight);
+
+        // Rotating drive shaft
+        ctx.fillStyle = '#666';
+        ctx.fillRect(-10, -30, 20, 30);
+        ctx.strokeRect(-10, -30, 20, 30);
+
+
+        // --- Draw the Peen Tool (Tilted and Orbiting) ---
+        ctx.save();
+        
+        const orbitRadius = angle * 2; 
+        ctx.rotate(rotation); 
+        ctx.translate(orbitRadius, 0); 
+
+        ctx.rotate(angle * (Math.PI / 180));
+        
+        const peenWidth = 40;
+        const peenHeight = 30;
+        const tipRadius = 15; 
+        
+        ctx.fillStyle = '#CCCCCC';
+        ctx.strokeStyle = '#888888';
+        ctx.lineWidth = 2;
+        
+        // Peen body 
+        ctx.beginPath();
+        ctx.moveTo(-peenWidth * 0.3, 0); 
+        ctx.lineTo(-peenWidth * 0.4, peenHeight - tipRadius); 
+        ctx.lineTo(peenWidth * 0.4, peenHeight - tipRadius);
+        ctx.lineTo(peenWidth * 0.3, 0); 
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // The Rounded Forming Tip (The Peen)
+        ctx.beginPath();
+        ctx.arc(0, peenHeight - tipRadius, tipRadius, 0, Math.PI, true);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore(); 
+
+        // Draw a small circle at the center to visualize the orbit axis
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(0, 0, 3, 0, 2 * Math.PI);
+        ctx.fill();
+        
+        ctx.restore(); 
+    }
+
+
+    function drawScene(timestamp) {
+        ctx.clearRect(0, 0, W, H);
+        
+        drawMachineStructure();
+        drawWorkpieceAndFixture();
+        drawRivet(rivetHeadWidth, rivetHeadHeight, rivetShankWidth, rivetShankHeight);
+
+        // Draw Clamping Mechanism
+        if (isClamped) { 
+            drawClampingMechanism();
+        }
+
+        // Draw the Tool Head (Machine Head + Peen)
+        drawToolHead(machineHeadY, toolAngle, toolRotation);
+
+        // Check if forming is active
+        if (isForming) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            
+            const feedRate = parseFloat(feedRateInput.value);
+            const effectiveDuration = TOTAL_FORMING_TIME_MS / (feedRate / 1.0);
+            
+            const progress = Math.min(elapsed / effectiveDuration, 1);
+            
+            // 4. Tool Descent (Smooth Linear Feed)
+            const peenTipContactPoint = WORKPIECE_Y - rivetShankHeight - rivetHeadHeight + 10; 
+            const targetHeadY = peenTipContactPoint;
+            const totalTravel = targetHeadY - MACHINE_HEAD_START_Y;
+            machineHeadY = MACHINE_HEAD_START_Y + (totalTravel * progress); 
+
+            // 5. Progressive Metal Flow
+            const flowProgress = Math.max(0, (progress - 0.2) / 0.8);
+            
+            rivetHeadWidth = 30 + (finalHeadWidth - 30) * flowProgress;
+            rivetHeadHeight = 10 + (20 * (1 - flowProgress)); 
+            rivetShankHeight = 60 - (20 * flowProgress); 
+
+            // 6. Monitoring (Update Progress Bar)
+            progressBar.style.width = `${Math.round(progress * 100)}%`;
+
+            // Orbital Rotation 
+            toolRotation += 0.2; 
+
+            if (progress >= 1) {
+                cancelAnimationFrame(animationFrameId);
+                finishFormingCycle(toolAngle, feedRate, finalHeadWidth);
+                return;
+            }
+        }
+        
+        // FIX: Ensure continuous drawing if the forming loop is NOT running (for parameter setting)
+        if (isForming || (!isForming && isClamped)) {
+             animationFrameId = requestAnimationFrame(drawScene);
+        }
+    }
+
+    // --- Input Validation and Core Functions ---
+    
+    function validateInput(input, min, max) {
+        let value = parseFloat(input.value);
+        if (isNaN(value) || value < min) {
+            input.value = min;
+        } else if (value > max) {
+            input.value = max;
+        }
+        return parseFloat(input.value);
+    }
+
+    function validateAngle() {
+        toolAngle = validateInput(tiltAngleInput, 3, 6);
+    }
+
+    function validateFeedRate() {
+        validateInput(feedRateInput, 0.5, 2.0);
+    }
+
+    function toggleClamping() {
+        if (!isClamped) {
+            isClamped = true;
+            clampBtn.textContent = 'Workpiece Clamped';
+            clampBtn.style.backgroundColor = '#4caf50';
+            
+            statusBar.textContent = 'Status:  Set Tilt Angle and Axial Feed Rate.';
+            
+            tiltAngleInput.disabled = false;
+            feedRateInput.disabled = false;
+            startBtn.disabled = false;
+            
+            // Start clamping animation
+            let clampStartTime = null;
+            function animateClamp(currentTime) {
+                if (!clampStartTime) clampStartTime = currentTime;
+                const elapsed = currentTime - clampStartTime;
+                const progress = Math.min(elapsed / CLAMP_MOVE_DURATION, 1);
+
+                clampArmAngle = progress * (Math.PI / 6); 
+                clampOffset = -20 * progress; 
+
+                drawScene(); 
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateClamp);
+                }
+            }
+            requestAnimationFrame(animateClamp);
+        }
+    }
+
+    function startFormingCycle() {
+        if (!isClamped || isForming) return;
+
+        isForming = true;
+        
+        startBtn.disabled = true;
+        tiltAngleInput.disabled = true;
+        feedRateInput.disabled = true;
+        clampBtn.disabled = true;
+
+        statusBar.textContent = 'Status:  Forming Cycle Initiated... Progressive Metal Flow ';
+        progressBarContainer.style.display = 'block';
+        outcomeDetails.style.display = 'none';
+
+        const feedRate = parseFloat(feedRateInput.value);
+        toolAngle = parseFloat(tiltAngleInput.value);
+        
+        if (feedRate > 1.8 || toolAngle < 3.5) {
+            finalHeadWidth = 70; 
+        } else if (feedRate < 0.7) {
+            finalHeadWidth = 40; 
+        } else {
+            finalHeadWidth = 60; 
+        }
+
+        startTime = null; 
+        animationFrameId = requestAnimationFrame(drawScene);
+    }
+
+    function finishFormingCycle(tiltAngle, feedRate, finalHeadWidth) {
+        isForming = false;
+        
+        let outcome = {
+            status: 'Success: Ideal Joint',
+            message: `Ideal Parameters (Tilt: ${tiltAngle}° & Feed: ${feedRate} mm/s): Excellent dimensional control and a smooth, defect-free formed head were achieved.`,
+            style: 'good'
+        };
+
+        if (finalHeadWidth > 65) {
+            outcome.status = 'Failure: Cracking & Buckling';
+            outcome.message = `High Stress Failure: The high feed rate (${feedRate} mm/s) and/or low tilt angle (${tiltAngle}°) caused excessive force, resulting in cracking and material buckling.`;
+            outcome.style = 'bad';
+        } else if (finalHeadWidth < 50) {
+            outcome.status = 'Partial Success: Incomplete Flow';
+            outcome.message = `Low Force / Slow Rate Failure: The feed rate (${feedRate} mm/s) was too low, leading to incomplete radial metal flow. The head is too small.`;
+            outcome.style = 'warning';
+        }
+
+        statusBar.className = outcome.style;
+        statusBar.textContent = `Status: ${outcome.status}`;
+        
+        outcomeDetails.style.display = 'block';
+        outcomeDetails.className = outcome.style;
+        resultMessage.innerHTML = outcome.message;
+
+        resetBtn.disabled = false;
+        
+        // Retract tool head visually
+        let retractStartTime = null;
+        const retractDuration = 500; 
+        const initialHeadY = machineHeadY;
+
+        function animateRetract(currentTime) {
+            if (!retractStartTime) retractStartTime = currentTime;
+            const elapsed = currentTime - retractStartTime;
+            const progress = Math.min(elapsed / retractDuration, 1);
+
+            machineHeadY = initialHeadY - (initialHeadY - MACHINE_HEAD_START_Y) * progress;
+            drawScene(); 
+
+            if (progress < 1) {
+                requestAnimationFrame(animateRetract);
+            }
+        }
+        requestAnimationFrame(animateRetract);
+    }
+
+    function resetExperiment() {
+        isClamped = false;
+        isForming = false;
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+        machineHeadY = MACHINE_HEAD_START_Y;
+        toolAngle = 4;
+        toolRotation = 0;
+        rivetShankHeight = 60;
+        rivetShankWidth = 30;
+        rivetHeadHeight = 10;
+        rivetHeadWidth = 30;
+
+        clampArmAngle = 0;
+        clampOffset = 0;
+
+        progressBarContainer.style.display = 'none';
+        progressBar.style.width = '0%';
+        outcomeDetails.style.display = 'none';
+        
+        clampBtn.textContent = ' Clamp Workpiece';
+        clampBtn.style.backgroundColor = '#ff9800';
+        clampBtn.disabled = false;
+        startBtn.disabled = true;
+        resetBtn.disabled = true;
+        
+        tiltAngleInput.value = 4;
+        feedRateInput.value = 1.0;
+        tiltAngleInput.disabled = true; 
+        feedRateInput.disabled = true; 
+        
+        statusBar.className = '';
+        statusBar.textContent = 'Status: CLICK "Clamp Workpiece" FIRST to enable Angle and Feed Rate inputs.';
+        
+        drawScene(); 
+    }
+
+    window.onload = resetExperiment; 
+</script>
+
 </body>
 </html>
