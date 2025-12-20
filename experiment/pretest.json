@@ -2,7 +2,7 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "Orbital forming is a:",
+      "question": "Q1.Orbital forming is a:",
       "answers": {
         "a": "Cold forming process",
         "b": "Hot forming process",
@@ -20,7 +20,7 @@
     },
 
     {
-      "question": "The maximum angle through which the peen deviates in the simulation is:",
+      "question": "Q2.The maximum angle through which the peen deviates in the simulation is:",
       "answers": {
         "a": "1°",
         "b": "2°",
@@ -38,7 +38,7 @@
     },
 
     {
-      "question": "The material of the tube in the simulation video of orbital forming process is:",
+      "question": "Q3.The material of the tube in the simulation video of orbital forming process is:",
       "answers": {
         "a": "Brass",
         "b": "Aluminium",
@@ -56,7 +56,7 @@
     },
 
     {
-      "question": "The initial temperature of the tube in the simulation of orbital forming is:",
+      "question": "Q4.The initial temperature of the tube in the simulation of orbital forming is:",
       "answers": {
         "a": "100°",
         "b": "250°",
@@ -74,7 +74,7 @@
     },
 
     {
-      "question": "The lower die is moved upward by which press in the simulation:",
+      "question": "Q5.The lower die is moved upward by which press in the simulation:",
       "answers": {
         "a": "Hydraulic press",
         "b": "Mechanical press",
