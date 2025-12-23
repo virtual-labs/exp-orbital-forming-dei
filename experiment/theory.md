@@ -1,4 +1,3 @@
-## Orbital Forming
 
 Orbital forming is a metal forming process in which the upper die moves in an orbital path and forms the part in continuous increments. The process uses a peen tool mounted on a rotating spindle, inclined at a small angle toward the center of the spindle. This peen makes contact with the workpiece along a line and gently moves the material into the desired final shape.
 
