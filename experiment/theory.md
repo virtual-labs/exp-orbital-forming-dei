@@ -30,3 +30,4 @@ Compared to conventional cold forming, orbital forming offers the following adva
 - Requires less axial load, allowing use of smaller presses and reducing equipment tonnage and floor space  
 - Lower forming forces lead to reduced fixture rigidity requirements and longer tool life  
 - Much quieter than cold-forming processes such as impact forming or peening  
+## link your theory
