@@ -1,13 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<!-- Add CSS at the head of HTML file -->
-    <link rel="stylesheet" href="./css/main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation Portal</title>
+  <style>
+    :root {
+      --sidebar-width: 280px;
+      --bg-main: #f9f9f9;      /* Off-white */
+      --bg-sidebar: #ececec;   /* Light Grey */
+      --text-dark: #333333;    /* Charcoal */
+      --accent: #555555;       /* Medium Grey */
+      --border: #d1d1d1;       /* Border Grey */
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-dark);
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* --- Hamburger Icon (Visible on Mobile) --- */
+    .menu-toggle {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1000;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text-dark);
+    }
+
+    /* --- Sidebar Navigation --- */
+    .sidebar {
+      position: fixed;
+      left: calc(-1 * var(--sidebar-width)); /* Hidden by default mobile */
+      top: 0;
+      width: var(--sidebar-width);
+      height: 100%;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      transition: transform 0.3s ease;
+      z-index: 999;
+      padding-top: 70px;
+      box-sizing: border-box;
+    }
+
+    .sidebar.active {
+      transform: translateX(var(--sidebar-width));
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 30px;
+    }
+
+    .menu-btn {
+      width: 85%;
+      display: block;
+      margin: 12px auto;
+      padding: 14px;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-dark);
+      text-align: left;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .menu-btn:hover {
+      background: var(--text-dark);
+      color: white;
+      border-color: var(--text-dark);
+    }
+
+    /* --- Main Content Area --- */
+    .content {
+      padding: 20px;
+      margin-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: margin-left 0.3s ease;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .video-container {
+      width: 100%;
+      max-width: 900px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    video {
+      width: 100%;
+      display: block;
+      border-radius: 4px;
+      background: #000; /* Keeps video area black before load */
+    }
+
+    /* Overlay when menu is open on mobile */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; 
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.2);
+      z-index: 998;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* --- Desktop View Adjustment --- */
+    @media (min-width: 1024px) {
+      .sidebar {
+        left: 0;
+        transform: none;
+      }
+      .content {
+        margin-left: var(--sidebar-width);
+      }
+      .menu-toggle, .overlay {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
-		<!-- Your code goes here-->
 
-	<!-- Add JS at the bottom of HTML file --> 
-        <script src="./js/main.js"></script>
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <button class="menu-toggle" onclick="toggleMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <div class="sidebar" id="sidebar">
+    <h2>Simulation List</h2>
+    <button class="menu-btn" onclick="loadSim('ORBITAL FORMING')">Orbital Forming</button>
+    <button class="menu-btn" onclick="loadSim('ORBITAL FORMING WITH EQUIVALENT STRAIN')">Equivalent Strain</button>
+    <button class="menu-btn" onclick="loadSim('ORBITAL FORMING-2')">Orbital Forming-2</button>
+    <button class="menu-btn" onclick="loadSim('RIVET FORMING USING ORBITAL FORMING')">Rivet Forming</button>
+  </div>
+
+  <div class="content">
+    <h1 id="sim-title">Select a Simulation to Begin</h1>
+    <div class="video-container">
+      <video id="sim-video" controls src=""></video>
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    function loadSim(name) {
+      document.getElementById('sim-title').innerText = name;
+      let videoPath = '';
+
+      switch(name) {
+        case 'ORBITAL FORMING':
+          videoPath = 'videos/OrbitalForming.mp4';
+          break;
+        case 'ORBITAL FORMING WITH EQUIVALENT STRAIN':
+          videoPath = 'videos/OrbitalStrain.mp4';
+          break;
+        case 'ORBITAL FORMING-2':
+          videoPath = 'videos/FormingOrbital.mp4';
+          break;
+        case 'RIVET FORMING USING ORBITAL FORMING':
+          videoPath = 'videos/OrbitalRiveting.mp4';
+          break;
+      }
+
+      const video = document.getElementById('sim-video');
+      video.src = videoPath;
+      video.load();
+      video.play();
+
+      // Close menu on mobile after selection
+      if (window.innerWidth < 1024) {
+        toggleMenu();
+      }
+    }
+  </script>
+
 </body>
 </html>

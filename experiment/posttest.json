@@ -2,37 +2,90 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "Q6. Which of the following materials can be formed using the orbital forming process?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Brass",
+        "b": "Aluminium",
+        "c": "Steel",
+        "d": "All of these"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Brass can be formed using orbital forming.",
+        "b": "Aluminium can be formed using orbital forming.",
+        "c": "Steel can also be formed using orbital forming.",
+        "d": "Correct. Orbital forming works on many materials including brass, aluminium, and steel."
       },
-      "correctAnswer": "a",
+      "correctAnswer": "d",
       "difficulty": "beginner"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "Q7. Which of the following are advantages of the orbital forming process?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Smaller press",
+        "b": "Smaller stresses in the dies",
+        "c": "Longer die life",
+        "d": "Reduction of noise and vibration",
+        "e": "All of the above"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Correct advantage but not the only one.",
+        "b": "Correct advantage but not the only one.",
+        "c": "Correct advantage but not the only one.",
+        "d": "Correct advantage but not the only one.",
+        "e": "Correct. All listed points are advantages of orbital forming."
       },
-      "correctAnswer": "c",
+      "correctAnswer": "e",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q8. Which of the following operations can be performed using the orbital forming process?",
+      "answers": {
+        "a": "Crimping",
+        "b": "Sealing",
+        "c": "Riveting",
+        "d": "All of these"
+      },
+      "explanations": {
+        "a": "Orbital forming can perform crimping.",
+        "b": "Orbital forming can perform sealing.",
+        "c": "Orbital forming can perform riveting.",
+        "d": "Correct. All listed operations can be done by orbital forming."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q9. Orbital forming is also known as:",
+      "answers": {
+        "a": "Rotary",
+        "b": "Swing",
+        "c": "Rocking-die forging",
+        "d": "All of these"
+      },
+      "explanations": {
+        "a": "Rotary forming is another name for orbital forming.",
+        "b": "Swing forming is also used as a term for orbital forming.",
+        "c": "Rocking-die forging is another technical name for orbital forming.",
+        "d": "Correct. All names refer to the same process."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q10. Which of the following products is NOT made using the orbital forming process?",
+      "answers": {
+        "a": "Fasteners",
+        "b": "Bevel gear",
+        "c": "Wheels",
+        "d": "Tube"
+      },
+      "explanations": {
+        "a": "Fasteners can be made by orbital forming.",
+        "b": "Bevel gears are NOT made by orbital forming — correct answer.",
+        "c": "Wheels can be made with orbital forming.",
+        "d": "Tubes can be formed in orbital forming."
+      },
+      "correctAnswer": "b",
       "difficulty": "beginner"
     }
   ]
