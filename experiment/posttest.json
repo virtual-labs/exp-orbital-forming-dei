@@ -2,7 +2,7 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "Q6. Which of the following materials can be formed using the orbital forming process?",
+      "question": "Q1. Which of the following materials can be formed using the orbital forming process?",
       "answers": {
         "a": "Brass",
         "b": "Aluminium",
@@ -19,7 +19,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Q7. Which of the following are advantages of the orbital forming process?",
+      "question": "Q2. Which of the following are advantages of the orbital forming process?",
       "answers": {
         "a": "Smaller press",
         "b": "Smaller stresses in the dies",
@@ -38,7 +38,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Q8. Which of the following operations can be performed using the orbital forming process?",
+      "question": "Q3. Which of the following operations can be performed using the orbital forming process?",
       "answers": {
         "a": "Crimping",
         "b": "Sealing",
@@ -55,7 +55,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Q9. Orbital forming is also known as:",
+      "question": "Q4. Orbital forming is also known as:",
       "answers": {
         "a": "Rotary",
         "b": "Swing",
@@ -72,7 +72,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Q10. Which of the following products is NOT made using the orbital forming process?",
+      "question": "Q5. Which of the following products is NOT made using the orbital forming process?",
       "answers": {
         "a": "Fasteners",
         "b": "Bevel gear",
